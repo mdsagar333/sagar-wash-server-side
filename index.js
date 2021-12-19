@@ -104,8 +104,8 @@ async function run() {
       }
     });
 
+    // some
     // create user
-
     app.patch("/api/v1/users", async (req, res) => {
       try {
         const user = req.body;
