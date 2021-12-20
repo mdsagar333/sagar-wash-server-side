@@ -1,0 +1,1 @@
+# [SAGAR WASH](https://sagar-wash-f4986.web.app/) is a laundry service website and this is all the API endpoint for that website. It has total 13 API endpoints. This code base written on using express framework.
