@@ -5,7 +5,7 @@ var app = express();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const { MongoClient, ObjectId } = require("mongodb");
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8000;
 
 const dbURL = `mongodb+srv://ayan:${process.env.DB_PASSWORD}@cluster0.tcz9h.mongodb.net/SagarWash?retryWrites=true&w=majority`;
 
@@ -130,6 +130,24 @@ async function run() {
       }
     });
 
+    // get admin
+    app.get("/api/v1/admin/:userUid", async (req, res) => {
+      try {
+        const { userUid } = req.params;
+        const adminUser = await Users.findOne({ uid: userUid });
+        console.log(adminUser);
+        res.status(200).json({
+          status: "success",
+          isAdmin: adminUser,
+        });
+      } catch (err) {
+        res.status(500).json({
+          status: "fail",
+          error: err.message,
+        });
+      }
+    });
+
     app.get("/", (req, res) => {
       res.send("Hello wrold");
     });
@@ -182,6 +200,26 @@ async function run() {
       }
     });
 
+    // get single order
+
+    app.get("/api/v1/order/:orderId", async (req, res) => {
+      try {
+        const { orderId } = req.params;
+        const id = ObjectId(orderId);
+        const order = await Orders.findOne({ _id: id });
+
+        res.status(200).json({
+          status: "success",
+          order,
+        });
+      } catch (err) {
+        res.status(500).json({
+          status: "fail",
+          error: err.message,
+        });
+      }
+    });
+
     // delete an order
     app.delete("/api/v1/order/:orderId", async (req, res) => {
       try {
@@ -189,6 +227,7 @@ async function run() {
         const id = ObjectId(orderId);
         const order = await Orders.deleteOne({ _id: id });
 
+        console.log(order, "delted");
         res.status(204).json({
           status: "success",
         });
